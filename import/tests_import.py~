@@ -1,0 +1,4 @@
+def f():
+    import time
+
+t = time.clock()
