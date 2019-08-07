@@ -1,0 +1,5 @@
+# coding: utf-8
+
+codes = {'rl': '\u2500'}
+
+print(codes['rl'])

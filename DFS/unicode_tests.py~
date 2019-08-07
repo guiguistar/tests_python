@@ -1,0 +1,31 @@
+# coding: utf-8
+
+"""
+La convention est la suivante:
+ - u pour le demi-trait du haut
+ - r pour le demi-trait de droite
+ - d pour le demi-trait du bas
+ - l pour le demi-trait de gauche
+"""
+
+codes = {'rl':   0x2500,
+         'ud':   0x2502,
+         'rd':   0x250C,
+         'dl':   0x2510,
+         'ur':   0x2514,
+         'ul':   0x2518,
+         'urd':  0x251C,
+         'udr':  0x2524,
+         'rdl':  0x252C,
+         'url':  0x2534,
+         'urdl': 0x253C,
+         'l':    0x2574,
+         'u':    0X2575,
+         'r':    0x2576,
+         'd':    0x2577,}
+
+if __name__ == '__main__':
+
+    for clef in codes:
+        code = codes[clef]
+        print(hex(code),code,chr(code))
