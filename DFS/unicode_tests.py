@@ -2,6 +2,8 @@
 
 import random
 import os
+import time
+
 """
 La convention est la suivante:
  - 0001 pour le demi-trait du haut
@@ -11,46 +13,68 @@ La convention est la suivante:
 """
 codes = [  0x20, # 0000 vide
          0x2575, # 0001 up
-         0x2576, # 0010 right
-         0x2514, # 0011 
-         0x2577, # 0100 
-         0x2502, # 
-         0x250c,
-         0x251c,
-         0x2574,
-         0x2518,
-         0x2500,
-         0x2534,
-         0x2510,
-         0x2524,
-         0x252c,
-         0x253c,
+         0x2576, # 0010    right
+         0x2514, # 0011 up right
+         0x2577, # 0100          down 
+         0x2502, # 0101 up       down
+         0x250c, # 0110    right down
+         0x251c, # 0111 up right down
+         0x2574, # 1000               left
+         0x2518, # 1001 up            left
+         0x2500, # 1010    right      left
+         0x2534, # 1011 up right      left
+         0x2510, # 1100          down left
+         0x2524, # 1101 up       down left
+         0x252c, # 1110    right down left
+         0x253c, # 1111 up right down left
 ]
-def grille_aleatoire(largeur,hauteur):
-    for i in range(hauteur):
-        ligne=''
-        for j in range(largeur):
-            clef_aleatoire = random.choice(list(codes))
-            ligne += chr(codes[clef_aleatoire])
-        print(ligne)
 
-def creer_matrice(largeur,hauteur):
-    matrice = []
-    for i in range(hauteur):
-        matrice.append([])
-        for j in range(largeur):
-            matrice[-1].append(0)
-            #matrice[-1].append(0x20)
-            #matrice[-1].append(chr(codes[random.choice(list(codes))]))
+codes_gras = [    0x20, # 0000 vide
+                0x2579, # 0001 up
+                0x257a, # 0010    right
+                0x2517, # 0011 up right
+                0x257b, # 0100          down 
+                0x2503, # 0101 up       down
+                0x250f, # 0110    right down
+                0x2523, # 0111 up right down
+                0x2578, # 1000               left
+                0x251B, # 1001 up            left
+                0x2501, # 1010    right      left
+                0x253b, # 1011 up right      left
+                0x2513, # 1100          down left
+                0x252b, # 1101 up       down left
+                0x2533, # 1110    right down left
+                0x254b, # 1111 up right down left
+]
+
+def creer_matrice_aleatoire(largeur,hauteur):
+    matrice = [ [random.randrange(16) for j in range(largeur)] for i in range(hauteur)]
     return matrice
 
-def afficher_matrice(matrice):
-    os.system('cls' if os.name=='nt' else 'clear')
-    for i in range(len(matrice)):
-        #ligne = ''.join(chr(c) for c in matrice[i])
-        ligne = ''.join(chr(codes[c]) for c in matrice[i])
-        print(ligne)
+def creer_matrice(largeur,hauteur):
+    matrice =[largeur*[0] for i in range(hauteur)]
+    return matrice
 
+def afficher_matrice(matrice,codes):
+    os.system('cls' if os.name=='nt' else 'clear')
+    resultat = ''
+    for i in range(len(matrice)):
+        ligne = ''.join(chr(codes[c]) for c in matrice[i])
+        resultat += ligne + '\n'
+    print(resultat)
+
+def sauvegarder_matrice(matrice):
+    hauteur = len(matrice)
+    largeur = len(matrice[0])
+
+    with open('matrice_{}_{}'.format(hauteur,largeur),'w') as f:
+        for i in range(hauteur):
+            for j in range(largeur):
+                #f.write(str(matrice[i][j]).rjust(3))
+                f.write(chr(codes[matrice[i][j]]))
+                if j == largeur -1:
+                    f.write('\n')
+    
 def generer_profondeur(matrice):
     une_pile = []
 
@@ -63,14 +87,8 @@ def generer_profondeur(matrice):
     une_pile.append((i_0, j_0))
 
     while une_pile:
+        # On lit le point qu'il y a au sommet de la pile
         i, j = une_pile[-1]
-
-        #voisins_libres = 0
-        
-        #if u_libre(matrice,i,j): voisins_libres |= 1
-        #if r_libre(matrice,i,j): voisins_libres |= 2
-        #if d_libre(matrice,i,j): voisins_libres |= 4
-        #if l_libre(matrice,i,j): voisins_libres |= 8
 
         voisins_libres = []
         
@@ -79,20 +97,18 @@ def generer_profondeur(matrice):
         if d_libre(matrice,i,j): voisins_libres.append((i+1,j))
         if l_libre(matrice,i,j): voisins_libres.append((i,j-1))
 
-        #if u_libre(matrice,i,j): voisins_libres.append(1)
-        #if r_libre(matrice,i,j): voisins_libres.append(2)
-        #if d_libre(matrice,i,j): voisins_libres.append(4)
-        #if l_libre(matrice,i,j): voisins_libres.append(8)
-
+        # On mélange les voisins libres
         random.shuffle(voisins_libres)
         
         #print('voisins_libres', voisins_libres)
 
         if voisins_libres:
+            # On choisit un voisin libre
             I, J = voisins_libres.pop()
+            
             if (I,J) == (i-1,j):
-                matrice[i][j] |= 1
-                matrice[I][J] |= 4
+                matrice[i][j] |= 1 # ajout du demi-trait sur le noeud père
+                matrice[I][J] |= 4 # ajout du demi-trait sur le noeud fils
             if (I,J) == (i,j+1):
                 matrice[i][j] |= 2
                 matrice[I][J] |= 8
@@ -102,34 +118,30 @@ def generer_profondeur(matrice):
             if (I,J) == (i,j-1):
                 matrice[i][j] |= 8
                 matrice[I][J] |= 2
-                
+
+            # On empile le voisin libre choisit
             une_pile.append((I,J))
 
-            afficher_matrice(matrice)
-            print('matrice[i][j]:', matrice[i][j], 'len(une_pile):', len(une_pile))
-            input()
+            afficher_matrice(matrice,codes)
+            print('matrice[i][j]:{:2}, len(une_pile):{:3}'.format(matrice[i][j], len(une_pile)))
+            time.sleep(0.01)
+
+        # Si le sommet n'a pas de voisins libres, on le dépile
         else:
             une_pile.pop()
             
-def u_libre(matrice,i,j):
-    return i > 0 and matrice[i-1][j] == 0
-def r_libre(matrice,i,j):
-    return j < len(matrice[0])-1 and matrice[i][j+1] == 0
-def d_libre(matrice,i,j):
-    return i < len(matrice)-1 and matrice[i+1][j] == 0
-def l_libre(matrice,i,j):
-    return j > 0 and matrice[i][j-1] == 0
-
-def char_en_couple(c,i,j):
-    if c == 'u': return (i-1,j)
-    if c == 'r': return (i,j+1)
-    if c == 'd': return (i+1,j)
-    if c == 'l': return (i,j-1)
+u_libre = lambda matrice, i, j: i > 0                 and matrice[i-1][j] == 0
+r_libre = lambda matrice, i, j: j < len(matrice[0])-1 and matrice[i][j+1] == 0
+d_libre = lambda matrice, i, j: i < len(matrice)-1    and matrice[i+1][j] == 0
+l_libre = lambda matrice, i, j: j > 0                 and matrice[i][j-1] == 0
 
 if __name__ == '__main__':
 
     #grille_aleatoire(100,15)
-    matrice = creer_matrice(60,30)
-    afficher_matrice(matrice)
+    matrice = creer_matrice(30,20)
+    #matrice = creer_matrice_aleatoire(30,20)
+    afficher_matrice(matrice,codes)
 
     generer_profondeur(matrice)
+
+    sauvegarder_matrice(matrice)
