@@ -1,0 +1,16 @@
+# coding: utf-8
+
+import random as rd
+import matlplotlib.pyplot as plt
+
+
+def gauss2d(N):
+    x, y = [], []
+    for i in range(N):
+        x.append(rd.gauss(0,1))
+        y.append(rd.gauss(0,1))
+
+    return x, y
+
+x, y = gauss2d(10)
+plt.plot(x,y)
