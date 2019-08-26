@@ -61,19 +61,29 @@ def afficher_matrice(matrice,codes):
     for i in range(len(matrice)):
         ligne = ''.join(chr(codes[c]) for c in matrice[i])
         resultat += ligne + '\n'
-    print(resultat)
+    print(resultat,end='')
 
 def sauvegarder_matrice(matrice):
     hauteur = len(matrice)
     largeur = len(matrice[0])
 
-    with open('matrice_{}_{}'.format(hauteur,largeur),'w') as f:
+    with open('matrice_{}_{}.txt'.format(hauteur,largeur),'w') as f:
         for i in range(hauteur):
             for j in range(largeur):
                 #f.write(str(matrice[i][j]).rjust(3))
                 f.write(chr(codes[matrice[i][j]]))
                 if j == largeur -1:
                     f.write('\n')
+
+def charger_matrice(fichier,codes):
+    matrice = []
+    with open(fichier) as f:
+        ligne = f.readline()
+        matrice.append([codes.index(ord(c)) for c in list(ligne)[:-1]])
+        while ligne:
+            ligne = f.readline()
+            matrice.append([codes.index(ord(c)) for c in list(ligne)[:-1]])
+    return matrice
     
 def generer_profondeur(matrice):
     une_pile = []
@@ -129,11 +139,14 @@ def generer_profondeur(matrice):
         # Si le sommet n'a pas de voisins libres, on le dépile
         else:
             une_pile.pop()
-            
+
 u_libre = lambda matrice, i, j: i > 0                 and matrice[i-1][j] == 0
 r_libre = lambda matrice, i, j: j < len(matrice[0])-1 and matrice[i][j+1] == 0
 d_libre = lambda matrice, i, j: i < len(matrice)-1    and matrice[i+1][j] == 0
 l_libre = lambda matrice, i, j: j > 0                 and matrice[i][j-1] == 0
+
+def parcourir_profondeur(matrice):
+    afficher_matrice(matrice,codes)
 
 if __name__ == '__main__':
 
