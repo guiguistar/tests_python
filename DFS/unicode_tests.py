@@ -3,6 +3,7 @@
 import random
 import os
 import time
+import argparse
 
 """
 La convention est la suivante:
@@ -47,6 +48,8 @@ codes_gras = [    0x20, # 0000 vide
                 0x254b, # 1111 up right down left
 ]
 
+codes_bruts = [ord(c) for c in '0123456789ABCDEF']
+
 def creer_matrice_aleatoire(largeur,hauteur):
     matrice = [ [random.randrange(16) for j in range(largeur)] for i in range(hauteur)]
     return matrice
@@ -85,7 +88,7 @@ def charger_matrice(fichier,codes):
             matrice.append([codes.index(ord(c)) for c in list(ligne)[:-1]])
     return matrice
     
-def generer_profondeur(matrice):
+def generer_profondeur(matrice, display=False):
     une_pile = []
 
     hauteur = len(matrice)
@@ -132,9 +135,10 @@ def generer_profondeur(matrice):
             # On empile le voisin libre choisit
             une_pile.append((I,J))
 
-            afficher_matrice(matrice,codes)
-            print('matrice[i][j]:{:2}, len(une_pile):{:3}'.format(matrice[i][j], len(une_pile)))
-            time.sleep(0.01)
+            if display:
+                afficher_matrice(matrice,codes)
+                print('matrice[i][j]:{:2}, len(une_pile):{:3}'.format(matrice[i][j], len(une_pile)))
+                time.sleep(0.01)
 
         # Si le sommet n'a pas de voisins libres, on le dépile
         else:
@@ -149,12 +153,22 @@ def parcourir_profondeur(matrice):
     afficher_matrice(matrice,codes)
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("rows", type=int, help="number of rows of the maze")
+    parser.add_argument("cols", type=int, help="number of columns of the maze")
+    parser.add_argument("--display",
+                        help="display the animation of the generation of the maze",
+                        action="store_true")
+    parser.add_argument("--style", type=str,
+                        help="should output be haxa codes or bold",
+                        choices=["bold", "hexa"])
+    args = parser.parse_args()
+    
+    matrice = creer_matrice(args.rows, args.cols)
+    generer_profondeur(matrice, display=args.display)
 
-    #grille_aleatoire(100,15)
-    matrice = creer_matrice(30,20)
-    #matrice = creer_matrice_aleatoire(30,20)
-    afficher_matrice(matrice,codes)
+    style = codes
+    if args.style == "bold": style = codes_gras
+    if args.style == "hexa": style = codes_bruts
 
-    generer_profondeur(matrice)
-
-    sauvegarder_matrice(matrice)
+    afficher_matrice(matrice, codes=style)
