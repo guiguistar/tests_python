@@ -4,6 +4,7 @@ import random
 import os
 import time
 import argparse
+import json
 
 """
 La convention est la suivante:
@@ -12,6 +13,12 @@ La convention est la suivante:
  - 0100 pour le demi-trait du bas
  - 1000 pour le demi-trait de gauche
 """
+
+# labyrinthe de la thèse de R. Coulom
+vi = [[2, 10, 14,  8, 4],
+      [4,  2, 15, 10, 13],
+      [3, 10,  9,  2, 9]]
+
 codes = [  0x20, # 0000 vide
          0x2575, # 0001 up
          0x2576, # 0010    right
@@ -159,16 +166,29 @@ if __name__ == '__main__':
     parser.add_argument("--display",
                         help="display the animation of the generation of the maze",
                         action="store_true")
+    parser.add_argument("--json",
+                        help="ouput stringified json 2d array",
+                        action="store_true")
+    parser.add_argument("--coulom",
+                        help="maze from R. Coulom thesis",
+                        action="store_true")
     parser.add_argument("--style", type=str,
                         help="should output be haxa codes or bold",
                         choices=["bold", "hexa"])
     args = parser.parse_args()
-    
-    matrice = creer_matrice(args.rows, args.cols)
+
+    # le constructeur prend (largeur, hauteur) en entrée
+    matrice = creer_matrice(args.cols, args.rows)
     generer_profondeur(matrice, display=args.display)
 
     style = codes
     if args.style == "bold": style = codes_gras
     if args.style == "hexa": style = codes_bruts
 
-    afficher_matrice(matrice, codes=style)
+    if args.coulom:
+        matrice = vi
+    
+    if not args.json:
+        afficher_matrice(matrice, codes=style)
+    else:
+        print(json.dumps(matrice, separators=(',',':')))
