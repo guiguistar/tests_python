@@ -159,6 +159,15 @@ l_libre = lambda matrice, i, j: j > 0                 and matrice[i][j-1] == 0
 def parcourir_profondeur(matrice):
     afficher_matrice(matrice,codes)
 
+def print_hexa_format():
+    for i in range(16):
+        description = ''
+        if i == 1: description = '   up bit'
+        if i == 2: description = 'right bit'
+        if i == 4: description = ' down bit'
+        if i == 8: description = ' left bit'
+        print(hex(i)[2:].upper(), bin(i)[2:].rjust(4,'0'), chr(codes[i]),description)
+    
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("rows", type=int, help="number of rows of the maze")
