@@ -178,8 +178,7 @@ if __name__ == '__main__':
     parser.add_argument("--json",
                         help="ouput stringified json 2d array",
                         action="store_true")
-    parser.add_argument("--coulom",
-                        help="maze from R. Coulom thesis",
+    parser.add_argument("--example",
                         action="store_true")
     parser.add_argument("--style", type=str,
                         help="should output be haxa codes or bold",
@@ -194,7 +193,7 @@ if __name__ == '__main__':
     if args.style == "bold": style = codes_gras
     if args.style == "hexa": style = codes_bruts
 
-    if args.coulom:
+    if args.example:
         matrice = vi
     
     if not args.json:
