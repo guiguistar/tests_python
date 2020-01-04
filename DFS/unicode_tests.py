@@ -15,9 +15,9 @@ La convention est la suivante:
 """
 
 # labyrinthe de la thèse de R. Coulom
-vi = [[2, 10, 14,  8, 4],
-      [4,  2, 15, 10, 13],
-      [3, 10,  9,  2, 9]]
+exemple = [[2, 10, 14,  8, 4],
+           [4,  2, 15, 10, 13],
+           [3, 10,  9,  2, 9]]
 
 codes = [  0x20, # 0000 vide
          0x2575, # 0001 up
@@ -194,7 +194,7 @@ if __name__ == '__main__':
     if args.style == "hexa": style = codes_bruts
 
     if args.example:
-        matrice = vi
+        matrice = exemple
     
     if not args.json:
         afficher_matrice(matrice, codes=style)
