@@ -1,0 +1,4 @@
+def loop(n):
+    print(f'Do it with n = {n}!')
+    if i > 1:
+        loop(n-1)

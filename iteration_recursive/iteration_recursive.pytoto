@@ -1,0 +1,19 @@
+def recursive_loop(n):
+    print(f'Do it with n = {n:2} !')
+
+    if n == 1:
+        print('We\'re done!')
+    else:
+        recursive_loop(n-1)
+
+def recursive_loop2(n,m):
+    print(f'Do it with n = {n:2} !')
+
+    if n == m:
+        print('We\'re done!')
+    else:
+        recursive_loop2(n+1,10)
+        
+if __name__ == '__main__':
+    recursive_loop(10)
+    recursive_loop2(1,10)
