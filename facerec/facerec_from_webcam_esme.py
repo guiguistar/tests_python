@@ -23,8 +23,8 @@ obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
 biden_image = face_recognition.load_image_file('biden.jpg')
 biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
 
-filipe_image =face_recognition.load_image_file('filipe.jpg')
-filipe_face_encoding = face_recognition.face_encodings(filipe_image)[0]
+#filipe_image =face_recognition.load_image_file('filipe.jpg')
+#filipe_face_encoding = face_recognition.face_encodings(filipe_image)[0]
 
 # Create arrays of known face encodings and their names
 known_face_encodings = [
