@@ -356,7 +356,9 @@ if __name__ == '__main__':
     parser.add_argument('-o','--output',type=str,help='output file')
     parser.add_argument('-n','--number',type=int,help='number of top',default=10)
     parser.add_argument('-d','--dir',type=str,help='directory containg xlsx files',default='.')
-    parser.add_argument('-r','--regex',type=str,help='python regex for filenames',default='(?P<string>QCM_MF_S1_(?P<number>[1-9]|1[012]))')
+    parser.add_argument('-r','--regex',type=str,
+                        help='python regex for filenames, for instance \'(?P<string>QCM_MF_S1_(?P<number>[1-9]|1[012]))\'',
+                        default='(?P<string>QCM_MF_S1_(?P<number>[1-9]|1[012]))')
     args = parser.parse_args()
     
     topN = TopN(N=args.number, title=args.title, rString=args.regex, workingDir=args.dir)
