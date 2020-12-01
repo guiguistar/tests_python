@@ -51,7 +51,7 @@ class XlsxFilesProcessor:
      - <string> 
      - <number>
     """
-    def __init__(self,rString = r'(?P<string>QCM_MF_S1_(?P<number>[1-9]|1[012]))',
+    def __init__(self,rString = r'(?P<string>QCM_MF_S1_(?P<number>1[012]|[1-9]))',
                  workingDir='.'):
         self.__regexMCQ = re.compile(rString)
 
@@ -123,7 +123,7 @@ class TopN:
 
     maxMissesNumber = 3
     
-    def __init__(self, N=10,title='Title', rString = r'(?P<string>QCM_MF_S1_(?P<number>[1-9]|1[012]))', workingDir='.'):
+    def __init__(self, N=10,title='Title', rString = r'(?P<string>QCM_MF_S1_(?P<number>1[012]|[1-9]))', workingDir='.'):
         # Get the .xlsx files from the current working directory
         self.xlsxProcessor = XlsxFilesProcessor(rString=rString, workingDir=workingDir)
         self.N = N
@@ -357,8 +357,8 @@ if __name__ == '__main__':
     parser.add_argument('-n','--number',type=int,help='number of top',default=10)
     parser.add_argument('-d','--dir',type=str,help='directory containg xlsx files',default='.')
     parser.add_argument('-r','--regex',type=str,
-                        help='python regex for filenames, for instance \'(?P<string>QCM_MF_S1_(?P<number>[1-9]|1[012]))\'',
-                        default='(?P<string>QCM_MF_S1_(?P<number>[1-9]|1[012]))')
+                        help='python regex for filenames, for instance \'(?P<string>QCM_MF_S1_(?P<number>1[012]|[1-9]))\'',
+                        default='(?P<string>QCM_MF_S1_(?P<number>1[012]|[1-9]))')
     args = parser.parse_args()
     
     topN = TopN(N=args.number, title=args.title, rString=args.regex, workingDir=args.dir)
