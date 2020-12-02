@@ -18,9 +18,9 @@ import xlsxwriter
 
 from typing import List
 
-def roundTenth(x):
+def roundCustom(x, factor=10):
     if math.isnan(x): return x
-    return round(10*x)/10
+    return round(factor*x)/factor
 
 def arrow(variation):
     if variation > 0: return '↗' 
@@ -319,11 +319,11 @@ class TopN:
         if numberOfMCQ > 1:
             df[cls.previousMeanField] = means(df,1,1+numberOfMCQ-1)
             df[cls.previousRankField] = df.loc[:,cls.previousMeanField].rank(ascending=False,method='min')
-            df[cls.previousMeanField] = df[cls.previousMeanField].map(roundTenth)
+            df[cls.previousMeanField] = df[cls.previousMeanField].map(roundCustom)
 
         df[cls.meanField] = means(df,1,1+numberOfMCQ)
         df[cls.rankField] = df.loc[:,cls.meanField].rank(ascending=False,method='min').map(int)
-        df[cls.meanField] = df[cls.meanField].map(roundTenth)
+        df[cls.meanField] = df[cls.meanField].map(roundCustom)
 
         df.sort_values(cls.rankField,inplace=True)
 
